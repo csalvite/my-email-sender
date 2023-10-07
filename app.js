@@ -1,11 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 
 app.use(express.json());
+
+app.use(cors());
+
+app.options('*', cors());
 
 const { EMAIL, PASS, PORT } = process.env;
 
@@ -15,6 +20,9 @@ app.post('/enviar-correo', (req, res) => {
   const { email, asunto, mensaje } = req.body;
 
   console.log('body', req.body);
+  if (!(email || asunto || mensaje)) {
+    throw new Error('Falta de datos!');
+  }
 
   // Configura el transporte de correo electrónico (puedes usar tu propio servicio SMTP aquí)
   const transporter = nodemailer.createTransport({
@@ -39,8 +47,19 @@ app.post('/enviar-correo', (req, res) => {
       res.status(500).send('Error al enviar el correo');
     } else {
       console.log('Correo enviado: ' + info.response);
-      res.send('Correo enviado con éxito');
+      res.send({
+        status: 'ok',
+        message: 'Correo enviado con éxito',
+      });
     }
+  });
+});
+
+app.use((error, req, res, _) => {
+  console.error(error);
+  res.status(error.httpStatus || 500).send({
+    status: 'Error',
+    message: error.message,
   });
 });
 
