@@ -8,6 +8,14 @@ const app = express();
 
 app.use(express.json());
 
+const corsOptions = {
+  origin: 'http://cesaralvite.com',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Habilita las cookies u otros encabezados personalizados
+};
+
+app.use(cors(corsOptions));
+
 app.use(cors());
 
 app.options('*', cors());
