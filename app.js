@@ -6,21 +6,21 @@ require('dotenv').config();
 
 const app = express();
 
-app.use(express.json());
-
-const corsOptions = {
-  origin: 'http://cesaralvite.com',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Habilita las cookies u otros encabezados personalizados
-};
-
-app.use(cors(corsOptions));
+const { EMAIL, PASS, PORT } = process.env;
 
 app.use(cors());
 
 app.options('*', cors());
 
-const { EMAIL, PASS, PORT } = process.env;
+app.use(express.json());
+
+// const corsOptions = {
+//   origin: 'http://cesaralvite.com',
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   credentials: true, // Habilita las cookies u otros encabezados personalizados
+// };
+
+// app.use(cors(corsOptions));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
